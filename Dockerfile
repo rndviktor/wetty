@@ -1,5 +1,5 @@
-FROM node:0.10.38
-MAINTAINER Nathan LeClaire <nathan@docker.com>
+FROM node:4.5.0-wheezy
+MAINTAINER Viktor K <rndviktor@docker.com>
 
 ADD . /app
 WORKDIR /app

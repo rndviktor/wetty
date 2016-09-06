@@ -78,6 +78,9 @@ var app = express();
 app.get('/wetty/ssh/:user', function(req, res) {
     res.sendfile(__dirname + '/public/wetty/index.html');
 });
+app.get('/wetty/sshhost/:hostuser', function(req, res) {
+    res.sendfile(__dirname + '/public/wetty/index.html');
+});
 app.use('/', express.static(path.join(__dirname, 'public')));
 
 if (runhttps) {
@@ -95,7 +98,12 @@ io.on('connection', function(socket){
     var sshuser = '';
     var request = socket.request;
     console.log((new Date()) + ' Connection accepted.');
-    if (match = request.headers.referer.match('/wetty/ssh/.+$')) {
+    if (match = request.headers.referer.match('/wetty/sshhost/.+$')) {
+        var query = require('url').parse(request.headers.referer, true).query;
+        sshhost = query.host;
+        sshuser = query.user + '@';
+        console.log('parsed host=', sshhost, ' user=', sshuser);
+    } else if (match = request.headers.referer.match('/wetty/ssh/.+$')) {
         sshuser = match[0].replace('/wetty/ssh/', '') + '@';
     } else if (globalsshuser) {
         sshuser = globalsshuser + '@';
